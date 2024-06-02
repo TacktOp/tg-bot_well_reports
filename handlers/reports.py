@@ -55,9 +55,9 @@ async def add_new_report_name(message: types.Message, state: FSMContext):
     await message.answer(
         "Укажите дневного, ночного и промежуточного админа\n\n"
         "Пример:\n"
-        "Слава\n"
-        "Ваня\n"
-        "Артём\n"
+        "Слава (дневной)\n"
+        "Ваня (ночной)\n"
+        "Артём (промежуточного)\n"
     )
 
 
@@ -102,15 +102,15 @@ async def add_new_report(message: types.Message, state: FSMContext):
             f"{employees[2]}\n\n"
             f"{datetime.datetime.now().date()}\n\n"
             f"Эватор:\n"
-            f"Нал {moneys[0]}\n"
-            f"Безнал {int(moneys[1]) - int(moneys[0])}\n"
-            f"Возврат {int(returns[0])}\n\n"
+            f"Нал {moneys[0]}₽\n"
+            f"Безнал {int(moneys[1]) - int(moneys[0])}₽\n"
+            f"Возврат {int(returns[0])}₽\n\n"
             f"Лангейм:\n"
-            f"Нал {moneys[2]}\n"
-            f"Безнал {moneys[3]}\n"
-            f"Возврат {int(returns[1])}\n\n"
-            f"Возвраты: {int(returns[0]) + int(returns[1])}\n"
-            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}"
+            f"Нал {moneys[2]}₽\n"
+            f"Безнал {moneys[3]}₽\n"
+            f"Возврат {int(returns[1])}₽\n\n"
+            f"Возвраты: {int(returns[0]) + int(returns[1])}₽\n"
+            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}₽"
         )
 
     elif datetime.datetime.now().hour >= 9 and datetime.datetime.now().hour <= 11:
@@ -135,15 +135,15 @@ async def add_new_report(message: types.Message, state: FSMContext):
             f"{employees[2]}\n\n"
             f"{datetime.datetime.today().date() - datetime.timedelta(days=1)}\n\n"
             f"Эватор:\n"
-            f"Нал {moneys[0]}\n"
-            f"Безнал {int(moneys[1]) - int(moneys[0])}\n"
-            f"Возврат {int(returns[0])}\n\n"
+            f"Нал {moneys[0]}₽\n"
+            f"Безнал {int(moneys[1]) - int(moneys[0])}₽\n"
+            f"Возврат {int(returns[0])}₽\n\n"
             f"Лангейм:\n"
-            f"Нал {moneys[2]}\n"
-            f"Безнал {moneys[3]}\n"
-            f"Возврат {int(returns[1])}\n\n"
-            f"Возвраты: {int(returns[0]) + int(returns[1])}\n"
-            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}"
+            f"Нал {moneys[2]}₽\n"
+            f"Безнал {moneys[3]}₽\n"
+            f"Возврат {int(returns[1])}₽\n\n"
+            f"Возвраты: {int(returns[0]) + int(returns[1])}₽\n"
+            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}₽"
         )
 
 
