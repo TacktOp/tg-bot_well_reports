@@ -3,8 +3,6 @@ from aiogram.filters.command import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
-import datetime
-
 from database.database import db_get_report_money
 
 get_report_money_router = Router()
@@ -28,5 +26,6 @@ async def cmd_get_report_money(message: types.Message, state: FSMContext):
 async def get_report_money(message: types.Message, state: FSMContext):
     await state.update_data(date=message.text)
     data = await state.get_data()
+    await state.clear()
     dates = f'{data["date"]}'.replace("по", "").split()
     await message.answer(db_get_report_money(dates))

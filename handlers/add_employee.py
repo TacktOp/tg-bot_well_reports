@@ -58,5 +58,6 @@ async def add_emloyee_name(message: types.Message, state: FSMContext):
 async def add_emloyee_phone_number(message: types.Message, state: FSMContext):
     await state.update_data(phone_number=message.text)
     data = await state.get_data()
+    await state.clear()
     db_add_employee(data['shift_type'], data['name'], int(data['phone_number']))
     await message.answer("Новый сотрудник добавлен")

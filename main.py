@@ -17,21 +17,21 @@ bot = Bot(token=config.bot_token.get_secret_value())
 dp = Dispatcher()
 
 dp.include_router(add_report_router)
-dp.include_router(get_report_money_router)
 dp.include_router(add_employee_router)
+dp.include_router(get_report_money_router)
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Reports (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     тип_смены type TEXT NOT NULL,
     дата type DATE NOT NULL,
-    админ_дневной type TEXT,
-    админ_ночной type TEXT,
-    админ_промежуточный type TEXT,
+    админ type TEXT,
     эвотор_нал type INTEGER NOT NULL,
     эвотор_безнал type INTEGER NOT NULL,
     лангейм_нал type INTEGER NOT NULL,
-    лангейм_безанл type INTEGER NOT NULL,
+    терминал_нал type INTEGER NOT NULL,
+    терминал_безнал type INTEGER NOT NULL,
+    терминал_сбп type INTEGER NOT NULL,
     возврат_эвотор type INTEGER,
     возврат_лангейм type INTEGER,
     итого type INTEGER NOT NULL

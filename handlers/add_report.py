@@ -20,12 +20,14 @@ class AddReport(StatesGroup):
 async def cmd_add_report_money(message: types.Message, state: FSMContext):
     await state.set_state(AddReport.money)
     await message.answer(
-        "Введите нал/общая за эвотор и нал/безнал за лангейм\n\n"
+        "Введите нал/общая за эвотор и нал/безнал/сбп за лангейм/терминал\n\n"
         "Пример:\n"
-        "1234 (нал эвотор)\n"
-        "4321 (объщая сумма эвотор)\n"
-        "1234 (нал лангейм)\n"
-        "4321 (безнал лангейм)"
+        "1000 (нал эвотор)\n"
+        "2000 (объщая сумма эвотор)\n"
+        "1000 (нал лангейм)\n"
+        "2000 (нал терминал)\n"
+        "3000 (безнал терминал)\n"
+        "4000 (сбп терминал)\n"
     )
 
 
@@ -34,10 +36,9 @@ async def add_report_name(message: types.Message, state: FSMContext):
     await state.update_data(money=message.text)
     await state.set_state(AddReport.employee)
     await message.answer(
-        "Укажите дневного и ночного админа\n\n"
+        "Укажите админа\n\n"
         "Пример:\n"
-        "Слава (дневной)\n"
-        "Ваня (ночной)\n"
+        "Слава\n"
     )
 
 
@@ -57,58 +58,63 @@ async def add_report_returns(message: types.Message, state: FSMContext):
 async def add_report(message: types.Message, state: FSMContext):
     await state.update_data(returns_money=message.text)
     data = await state.get_data()
+    await state.clear()
     moneys = f"{data['money']}".replace("\n", " ").split()
-    employees = f"{data['employee']}".replace("\n", " ").split()
+    employee = data['employee']
     returns = f"{data['returns_money']}".replace("\n", " ").split()
+    total = int(moneys[1]) + int(moneys[2]) + int(moneys[3]) + int(moneys[4]) + int(moneys[5])
     if datetime.datetime.now().hour >= 20 and datetime.datetime.now().hour <= 23:
         db_add_report(
             'день',
             datetime.datetime.now().date(),
-            employees[0],
-            employees[1],
-            employees[2],
+            employee,
             int(moneys[0]),
             int(moneys[1]) - int(moneys[0]),
             int(moneys[2]),
             int(moneys[3]),
+            int(moneys[4]),
+            int(moneys[5]),
             int(returns[0]),
             int(returns[1]),
-            (int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))
+            total
         )
         await message.answer(
             f"Дневная смена администратор:\n"
-            f"{employees[0]}\n\n"
+            f"{employee}\n\n"
             f"{datetime.datetime.now().date()}\n\n"
             f"Эватор:\n"
             f"Нал {moneys[0]}₽\n"
             f"Безнал {int(moneys[1]) - int(moneys[0])}₽\n"
             f"Возврат {int(returns[0])}₽\n\n"
             f"Лангейм:\n"
-            f"Нал {moneys[2]}₽\n"
-            f"Безнал {moneys[3]}₽\n"
+            f"Нал {moneys[2]}₽\n\n"
+            f"Терминал:\n"
+            f"Нал {moneys[3]}₽\n"
+            f"Безнал {moneys[4]}₽\n"
+            f"СБП {moneys[5]}₽\n\n"
             f"Возврат {int(returns[1])}₽\n\n"
             f"Возвраты: {int(returns[0]) + int(returns[1])}₽\n"
-            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}₽"
+            f"Итого: {total}₽"
         )
 
     elif datetime.datetime.now().hour >= 9 and datetime.datetime.now().hour <= 11:
         db_add_report(
             'ночь',
             datetime.datetime.today().date() - datetime.timedelta(days=1),
-            employees[0],
-            employees[1],
-            employees[2],
+            employee,
             int(moneys[0]),
             int(moneys[1]) - int(moneys[0]),
             int(moneys[2]),
             int(moneys[3]),
+            int(moneys[4]),
+            int(moneys[5]),
             int(returns[0]),
             int(returns[1]),
-            (int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))
+            total
         )
         await message.answer(
             f"Ночная смена администратор:\n"
-            f"{employees[1]}\n\n"
+            f"{employee}\n\n"
             f"{datetime.datetime.today().date() - datetime.timedelta(days=1)}\n\n"
             f"Эватор:\n"
             f"Нал {moneys[0]}₽\n"
@@ -116,8 +122,11 @@ async def add_report(message: types.Message, state: FSMContext):
             f"Возврат {int(returns[0])}₽\n\n"
             f"Лангейм:\n"
             f"Нал {moneys[2]}₽\n"
-            f"Безнал {moneys[3]}₽\n"
+            f"Терминал:\n"
+            f"Нал {moneys[3]}₽\n"
+            f"Безнал {moneys[4]}₽\n"
+            f"СБП {moneys[5]}₽\n\n"
             f"Возврат {int(returns[1])}₽\n\n"
             f"Возвраты: {int(returns[0]) + int(returns[1])}₽\n"
-            f"Итого: {(int(moneys[1]) + int(moneys[2]) + int(moneys[3])) - (int(returns[0]) + int(returns[1]))}₽"
+            f"Итого: {total}₽"
         )

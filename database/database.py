@@ -5,13 +5,13 @@ import datetime
 def db_add_report(
         shift_type,
         date,
-        admin_day,
-        admin_night,
-        admin_intermediate,
+        admin,
         evotor_nal,
         evotor_besnal,
         lanheim_nal,
-        lanheim_besanl,
+        terminal_nal,
+        terminal_besnal,
+        terminal_sbp,
         return_evotor,
         return_lanheim,
         total
@@ -19,30 +19,32 @@ def db_add_report(
     connection = sqlite3.connect("./database/database.db")
     cursor = connection.cursor()
 
-    data = (shift_type,
-            date,
-            admin_day,
-            admin_night,
-            admin_intermediate,
-            evotor_nal,
-            evotor_besnal,
-            lanheim_nal,
-            lanheim_besanl,
-            return_evotor,
-            return_lanheim,
-            total)
+    data = (
+        shift_type,
+        date,
+        admin,
+        evotor_nal,
+        evotor_besnal,
+        lanheim_nal,
+        terminal_nal,
+        terminal_besnal,
+        terminal_sbp,
+        return_evotor,
+        return_lanheim,
+        total
+    )
 
     cursor.execute(
         "INSERT INTO Reports ("
         "тип_смены,"
         "дата,"
-        "админ_дневной,"
-        "админ_ночной,"
-        "админ_промежуточный,"
+        "админ,"
         "эвотор_нал,"
         "эвотор_безнал,"
         "лангейм_нал,"
-        "лангейм_безанл,"
+        "терминал_нал,"
+        "терминал_безнал,"
+        "терминал_сбп,"
         "возврат_эвотор,"
         "возврат_лангейм,"
         "итого"
@@ -68,15 +70,19 @@ def db_get_report_money(dates):
     evotor_nal = 0
     evotor_besnal = 0
     langeim_nal = 0
-    langeim_besnal = 0
+    terminal_nal = 0
+    terminal_besnal = 0
+    terminal_sbp = 0
     return_money = 0
     result_money = 0
     for row in rows:
         print(row)
-        evotor_nal = evotor_nal + row[6]
-        evotor_besnal = evotor_besnal + row[7]
-        langeim_nal = langeim_nal + row[8]
-        langeim_besnal = langeim_besnal + row[9]
+        evotor_nal = evotor_nal + row[4]
+        evotor_besnal = evotor_besnal + row[5]
+        langeim_nal = langeim_nal + row[6]
+        terminal_nal = terminal_nal + row[7]
+        terminal_besnal = terminal_besnal + row[8]
+        terminal_sbp = terminal_sbp + row[9]
         return_money = return_money + row[10] + row[11]
         result_money = result_money + row[12] - (row[10] + row[11])
 
@@ -84,10 +90,12 @@ def db_get_report_money(dates):
     connection.close()
 
     result = f"Эвотор нал: {evotor_nal}\n" \
-             f"Эвотор безнал: {evotor_besnal}\n" \
-             f"Лангейм нал: {langeim_nal}\n" \
-             f"Лангейм безнал: {langeim_besnal}\n" \
-             f"Возвраты: {return_money}\n" \
+             f"Эвотор безнал: {evotor_besnal}\n\n" \
+             f"Лангейм нал: {langeim_nal}\n\n" \
+             f"Терминал нал: {terminal_nal}\n" \
+             f"Терминал безнал: {terminal_besnal}\n" \
+             f"Терминал СБП: {terminal_sbp}\n\n" \
+             f"Возвраты: {return_money}\n\n" \
              f"Итоги: {result_money}"
 
     return result
