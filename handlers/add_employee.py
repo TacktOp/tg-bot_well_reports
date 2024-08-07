@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from database.database import db_add_employee
+from database.database import db_add_employee, db_add_employee_report
 
 add_employee_router = Router()
 
@@ -60,4 +60,5 @@ async def add_emloyee_phone_number(message: types.Message, state: FSMContext):
     data = await state.get_data()
     await state.clear()
     db_add_employee(data['shift_type'], data['name'], int(data['phone_number']))
+    db_add_employee_report(data['name'])
     await message.answer("Новый сотрудник добавлен")

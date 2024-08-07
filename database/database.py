@@ -64,8 +64,8 @@ def db_get_report_money(dates):
         f"{datetime.datetime.now().year}-{dates[1]}"
     )
 
-    cursor.execute("SELECT * FROM Reports WHERE date(дата) BETWEEN ? AND ?", dates)
-    rows = cursor.fetchall()
+    cursor.execute("SELECT * FROM Reports WHERE date(дата) BETWEEN ? AND ?", dates).fetchall()
+    rows = cursor
 
     evotor_nal = 0
     evotor_besnal = 0
@@ -76,7 +76,6 @@ def db_get_report_money(dates):
     return_money = 0
     result_money = 0
     for row in rows:
-        print(row)
         evotor_nal = evotor_nal + row[4]
         evotor_besnal = evotor_besnal + row[5]
         langeim_nal = langeim_nal + row[6]
@@ -110,3 +109,90 @@ def db_add_employee(shift_type, name, phone_number):
 
     connection.commit()
     connection.close()
+
+
+def db_get_employee():
+    connection = sqlite3.connect("./database/database.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT имя FROM Employees")
+    rows = cursor.fetchall()
+
+    connection.commit()
+    connection.close()
+
+    return rows
+
+
+def db_delete_employee(name, phone_number):
+    connection = sqlite3.connect("./database/database.db")
+    cursor = connection.cursor()
+    data = (name, phone_number,)
+
+    info = cursor.execute("SELECT * FROM Employees WHERE имя = ? AND номер_телефона = ?", (data)).fetchall()
+    if len(info) == 0:
+        return False
+    else:
+        cursor.execute("DELETE FROM Employees WHERE имя = ? AND номер_телефона = ?", (data))
+
+    connection.commit()
+    connection.close()
+
+
+def db_add_employee_report(name):
+    connection = sqlite3.connect("./database/database.db")
+    cursor = connection.cursor()
+
+    data = (name, 0, datetime.datetime.now().date(), '')
+
+    cursor.execute(
+        "INSERT INTO EmployeesReports (админ, количество_смен, дата, задачи) VALUES (?, ?, ?, ?)", data)
+
+    connection.commit()
+    connection.close()
+
+
+def db_update_employee_report(name):
+    connection = sqlite3.connect("./database/database.db")
+    cursor = connection.cursor()
+
+    current_date = datetime.datetime.now().date()
+
+    cursor.execute("SELECT id, админ, количество_смен, дата FROM EmployeesReports ORDER BY дата DESC")
+    rows = cursor.fetchall()
+
+    for row in rows:
+        if int(row[3][5:7]) == current_date.month and row[1] == name:
+            data = (int(row[2]) + 1, current_date, row[0])
+            cursor.execute("UPDATE EmployeesReports SET количество_смен = ?, дата = ? WHERE id = ?", data)
+            connection.commit()
+            connection.close()
+            return
+        elif int(row[3][5:7]) <= current_date.month and row[1] == name:
+            data = (name, 1, current_date, '')
+            cursor.execute("INSERT INTO EmployeesReports (админ, количество_смен, дата, задачи) VALUES (?, ?, ?, ?)",
+                           data)
+            connection.commit()
+            connection.close()
+            return
+
+
+def db_get_employee_report():
+    connection = sqlite3.connect("./database/database.db")
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM EmployeesReports ORDER BY дата DESC")
+    rows = cursor.fetchall()
+    rows_2 = db_get_employee()
+
+    data = ""
+    for row_2 in rows_2:
+        for row in rows:
+            if row[1] == row_2[0] and int(row[3][5:7]) == datetime.datetime.now().date().month:
+                data += f"Администратор: {row_2[0]}\n" \
+                        f"Кол-во смен: {row[2]}\n\n"
+
+    connection.commit()
+    connection.close()
+
+    return data
