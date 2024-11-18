@@ -1,6 +1,5 @@
-from aiogram import types, Router, Bot
+from aiogram import types, Router
 from aiogram.filters.command import Command
-from aiogram.fsm.state import State, StatesGroup
 
 from database.database import db_get_employee_report
 

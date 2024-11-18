@@ -64,8 +64,8 @@ def db_get_report_money(dates):
         f"{datetime.datetime.now().year}-{dates[1]}"
     )
 
-    cursor.execute("SELECT * FROM Reports WHERE date(дата) BETWEEN ? AND ?", dates).fetchall()
-    rows = cursor
+    cursor.execute("SELECT * FROM Reports WHERE date(дата) BETWEEN ? AND ?", dates)
+    rows = cursor.fetchall()
 
     evotor_nal = 0
     evotor_besnal = 0
@@ -76,14 +76,14 @@ def db_get_report_money(dates):
     return_money = 0
     result_money = 0
     for row in rows:
-        evotor_nal = evotor_nal + row[4]
-        evotor_besnal = evotor_besnal + row[5]
-        langeim_nal = langeim_nal + row[6]
-        terminal_nal = terminal_nal + row[7]
-        terminal_besnal = terminal_besnal + row[8]
-        terminal_sbp = terminal_sbp + row[9]
-        return_money = return_money + row[10] + row[11]
-        result_money = result_money + row[12] - (row[10] + row[11])
+        evotor_nal += row[4]
+        evotor_besnal += row[5]
+        langeim_nal += row[6]
+        terminal_nal += row[7]
+        terminal_besnal += row[8]
+        terminal_sbp += row[9]
+        return_money += row[10] + row[11]
+        result_money += row[12] - (row[10] + row[11])
 
     connection.commit()
     connection.close()
