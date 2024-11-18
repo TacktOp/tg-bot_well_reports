@@ -71,8 +71,10 @@ async def add_report_bonuses(message: types.Message, state: FSMContext):
     await message.answer(
         "Укажите общее пополнение бонусов и количесво пополнений\n\n"
         "Пример:\n"
-        "1000 (сумма бонусов за день)\n"
-        "3 (кол-во пополнений)\n"
+        "130\n"
+        "232\n"
+        "4343\n"
+        "(пополнения бонусов)"
     )
 
 
@@ -84,6 +86,12 @@ async def add_report(message: types.Message, state: FSMContext):
     moneys = f"{data['money']}".replace("\n", " ").replace(",", ".").split()
     employee = data['employee']
     bonuses = f"{data['bonuses']}".replace("\n", " ").split()
+    bonuses_x = 0
+    bonuses_summ = 0
+    for bonuses_i in bonuses:
+        bonuses_x += 1
+        bonuses_summ += bonuses_i
+
     returns = f"{data['returns_money']}".replace("\n", " ").split()
     total = float(moneys[1]) + float(moneys[2]) + float(moneys[3]) + float(moneys[4]) + float(moneys[5])
     if datetime.datetime.now().hour >= 0:
@@ -113,8 +121,8 @@ async def add_report(message: types.Message, state: FSMContext):
             f"Лангейм:\n"
             f"Нал {moneys[2]}₽\n\n"
             f"Бонусы:\n"
-            f"Сумма {bonuses[0]}\n"
-            f"Кол-во пополнений {bonuses[1]}\n\n"
+            f"Сумма {bonuses_summ}\n"
+            f"Кол-во пополнений {bonuses_x}\n\n"
             f"Терминал:\n"
             f"Нал {moneys[3]}₽\n"
             f"Безнал {moneys[4]}₽\n"
