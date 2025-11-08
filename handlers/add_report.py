@@ -114,14 +114,19 @@ async def add_report(message: types.Message, state: FSMContext):
     info_bonuses = data['info_bonuses']
 
     returns = f"{data['returns_money']}".replace("\n", " ").split()
-    if returns[1] is None:
-        returns[1] = '0'
+    if len(returns) >= 1:
+        returns.append(1)
 
     steam = int(data['steam'])
     steam_summ = steam * 150
 
-    total = float(
-        moneys[1]) + float(moneys[2]) + float(moneys[3]) + float(moneys[4]) + float(moneys[5]) + float(moneys[6])
+    total = float(moneys[1]) \
+        + float(moneys[2]) \
+        + float(moneys[3]) \
+        + float(moneys[4]) \
+        + float(moneys[5]) \
+        + float(moneys[6]) \
+        + steam_summ
 
     if datetime.datetime.now().hour >= 0:
         # db_add_report(
@@ -155,11 +160,14 @@ async def add_report(message: types.Message, state: FSMContext):
             f"СБП {moneys[5]}₽\n"
             f"Возврат {float(returns[1])}₽\n\n"
             f"Планшет:\n"
-            f"СБП {moneys[6]}"
+            f"СБП {moneys[6]}₽\n"
             f"Бонусы:\n"
             f"Сумма {bonuses_summ}\n"
-            f"Кол-во пополнений {bonuses_x}\n\n"
-            f"Причина: {info_bonuses}"
+            f"Кол-во пополнений {bonuses_x}\n"
+            f"Причина: {info_bonuses}\n\n"
+            f"Steam:\n"
+            f"Колл-во: {steam}\n"
+            f"Сумма: {steam_summ}₽\n\n"
             f"Возвраты: {float(returns[0]) + float(returns[1])}₽\n"
             f"Итого: {total}₽"
         )
@@ -195,11 +203,14 @@ async def add_report(message: types.Message, state: FSMContext):
             f"СБП {moneys[5]}₽\n"
             f"Возврат {float(returns[1])}₽\n\n"
             f"Планшет:\n"
-            f"СБП {moneys[6]}"
+            f"СБП {moneys[6]}₽\n"
             f"Бонусы:\n"
             f"Сумма {bonuses_summ}\n"
-            f"Кол-во пополнений {bonuses_x}\n\n"
-            f"Причина: {info_bonuses}"
+            f"Кол-во пополнений {bonuses_x}\n"
+            f"Причина: {info_bonuses}\n\n"
+            f"Steam:\n"
+            f"Колл-во: {steam}\n"
+            f"Сумма: {steam_summ}₽\n\n"
             f"Возвраты: {float(returns[0]) + float(returns[1])}₽\n"
             f"Итого: {total}₽"
         )

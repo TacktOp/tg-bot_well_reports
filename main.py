@@ -8,7 +8,7 @@ import logging
 from config_reader import config
 from handlers.add_report import add_report_router
 # from handlers.get_report_money import get_report_money_router
-from handlers.add_employee import add_employee_router
+# from handlers.add_employee import add_employee_router
 from handlers.delete_employee import delete_employee_router
 # from handlers.get_employee_report import get_employee_report_router
 from handlers.add_employee_quests import add_employee_quests_router
@@ -20,7 +20,7 @@ bot = Bot(token=config.bot_token.get_secret_value())
 dp = Dispatcher()
 
 dp.include_router(add_report_router)
-dp.include_router(add_employee_router)
+# dp.include_router(add_employee_router)
 # dp.include_router(get_report_money_router)
 dp.include_router(delete_employee_router)
 # dp.include_router(get_employee_report_router)
