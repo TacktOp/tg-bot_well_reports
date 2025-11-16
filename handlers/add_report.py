@@ -108,14 +108,15 @@ async def add_report(message: types.Message, state: FSMContext):
     bonuses = f"{data['bonuses']}".replace("\n", " ").split()
     bonuses_x = 0
     bonuses_summ = 0
-    for bonuses_i in bonuses:
-        bonuses_x += 1
-        bonuses_summ += int(bonuses_i)
+    if int(bonuses[0]) > 0:
+        for bonuses_i in bonuses:
+            bonuses_x += 1
+            bonuses_summ += int(bonuses_i)
     info_bonuses = data['info_bonuses']
 
     returns = f"{data['returns_money']}".replace("\n", " ").split()
     if len(returns) >= 1:
-        returns.append(1)
+        returns.append("0")
 
     steam = int(data['steam'])
     steam_summ = steam * 150
@@ -128,7 +129,7 @@ async def add_report(message: types.Message, state: FSMContext):
         + float(moneys[6]) \
         + steam_summ
 
-    if datetime.datetime.now().hour >= 0:
+    if datetime.datetime.now().hour >= 21 and datetime.datetime.now().hour <= 23:
         # db_add_report(
         #     'день',
         #     datetime.datetime.now().date(),
@@ -160,7 +161,7 @@ async def add_report(message: types.Message, state: FSMContext):
             f"СБП {moneys[5]}₽\n"
             f"Возврат {float(returns[1])}₽\n\n"
             f"Планшет:\n"
-            f"СБП {moneys[6]}₽\n"
+            f"СБП {moneys[6]}₽\n\n"
             f"Бонусы:\n"
             f"Сумма {bonuses_summ}\n"
             f"Кол-во пополнений {bonuses_x}\n"
@@ -172,7 +173,7 @@ async def add_report(message: types.Message, state: FSMContext):
             f"Итого: {total}₽"
         )
 
-    elif 9 <= datetime.datetime.now().hour <= 11:
+    elif datetime.datetime.now().hour >= 9 and datetime.datetime.now().hour <= 11:
         # db_add_report(
         #     'ночь',
         #     datetime.datetime.today().date() - datetime.timedelta(days=1),
@@ -203,7 +204,7 @@ async def add_report(message: types.Message, state: FSMContext):
             f"СБП {moneys[5]}₽\n"
             f"Возврат {float(returns[1])}₽\n\n"
             f"Планшет:\n"
-            f"СБП {moneys[6]}₽\n"
+            f"СБП {moneys[6]}₽\n\n"
             f"Бонусы:\n"
             f"Сумма {bonuses_summ}\n"
             f"Кол-во пополнений {bonuses_x}\n"
